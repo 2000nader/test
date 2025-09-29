@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Telegram Bot</title>
+    <style>
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      .form {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+
+      label {
+        margin-bottom: 10px;
+      }
+
+      input,
+      textarea {
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        padding: 10px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #result {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>TEST Telegram Bot</h1>
+      <h1>@IR_NADER</h1>
+       <h1>فیلتر شکن خود را فعال نمایید</h1>
+      <div class="form">
+        <label for="token">Token:</label>
+        <input type="text" id="token" />
+
+        <label for="chat-id">Chat ID:</label>
+        <input type="text" id="chat-id" />
+
+        <label for="message">Message:</label>
+        <textarea id="message"></textarea>
+
+        <button id="send-message-btn">Send Message</button>
+      </div>
+
+      <div id="result"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const sendMessageToTelegram = (token, chatId, message) => {
+        axios
+          .get(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${message}`)
+          .then(response => {
+            if (response.data.ok) {
+              document.getElementById('result').innerHTML = '<p>Message sent successfully</p>';
+            } else {
+              document.getElementById('result').innerHTML = '<p>Error sending message</p>';
+            }
+          })
+          .catch(error => {
+            document.getElementById('result').innerHTML = `<p>${error.message}</p>`;
+          });
+      };
+
+      document.getElementById('send-message-btn').addEventListener('click', () => {
+        const token = document.getElementById('token').value.trim();
+        const chatId = document.getElementById('chat-id').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (token && chatId && message) {
+          sendMessageToTelegram(token, chatId, message);
+        } else {
+          document.getElementById('result').innerHTML = '<p>Please fill in all fields</p>';
+        }
+      });
+    </script>
+  </body>
+</html>
